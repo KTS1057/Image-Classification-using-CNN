@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNN Image Classifier</title>
+    <style>
+        /* Your existing styles from the screenshots */
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', sans-serif; }
+        body {
+            height:100vh;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            display:flex; justify-content:center; align-items:center;
+        }
+        .container {
+            width:90%; height:90vh; display:flex; border-radius:20px;
+            overflow:hidden; box-shadow:0 25px 60px rgba(0,0,0,0.6);
+        }
+        .slider { width:55%; overflow:hidden; position:relative; }
+        .slides { display:flex; width:400%; height:100%; animation: slide 20s infinite; }
+        .slides img { width:100%; height:100%; object-fit:cover; }
+        @keyframes slide {
+            0% {transform:translateX(0);}
+            25% {transform:translateX(-100%);}
+            50% {transform:translateX(-200%);}
+            75% {transform:translateX(-300%);}
+            100% {transform:translateX(0);}
+        }
+        .panel {
+            width:45%; background:rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px); padding:50px; color:white;
+            display:flex; flex-direction:column; justify-content:center;
+        }
+        .panel h1 { font-size:32px; margin-bottom:15px; }
+        .panel p { opacity:0.8; margin-bottom:30px; }
+        .upload-box {
+            border:2px dashed #00eaff; padding:40px; border-radius:15px;
+            text-align:center; transition:0.4s; cursor:pointer;
+        }
+        .upload-box:hover { background:rgba(255,255,255,0.1); transform:scale(1.02); }
+        button {
+            margin-top: 20px; padding: 15px; font-size: 16px;
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            color: white; border: none; border-radius: 30px;
+            cursor: pointer; transition: 0.3s;
+        }
+        button:hover { transform: scale(1.05); box-shadow: 0 0 20px #00eaff; }
+        .features { margin-top:40px; font-size:14px; opacity:0.7; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="slider">
+            <div class="slides">
+                <img src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131">
+                <img src="https://images.unsplash.com/photo-1558788353-f76d92427f16">
+                <img src="https://images.unsplash.com/photo-1537151625747-768eb6cf92b2">
+                <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e">
+            </div>
+        </div>
+
+        <div class="panel">
+            <h1>🐾 CNN Image Classifier</h1>
+            <p>Deep Learning based Cat vs Dog Classification using Convolutional Neural Networks</p>
+            
+            <form action="/predict" method="POST" enctype="multipart/form-data">
+                <div class="upload-box">
+                    <h3>Upload Your Image</h3>
+                    <p>Drag & Drop or Choose File</p>
+                    <input type="file" name="file" required>
+                </div>
+                <button type="submit">Predict Now</button>
+            </form>
+
+            <div class="features">
+                ✓ CNN Architecture<br>
+                ✓ Deep Learning Model<br>
+                ✓ AI-Based Prediction<br>
+                ✓ Real-Time Classification
+            </div>
+        </div>
+    </div>
+</body>
+</html>
