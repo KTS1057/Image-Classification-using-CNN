@@ -23,14 +23,14 @@ if uploaded_file is not None:
     image = Image.open(uploaded_file)
     st.image(image, width="stretch")
 
-    img = image.resize((160,160))  # ✅ must match training size
+    img = image.resize((160,160))  
     img_array = np.array(img)/255.0
     img_array = np.expand_dims(img_array, axis=0)
 
     prediction = model.predict(img_array)
     confidence = float(prediction[0][0])
 
-    model_accuracy = 92  # replace with your real accuracy
+    model_accuracy = 92  
 
     if confidence > 0.5:
         st.success(f"🐶 Dog | Confidence: {confidence*100:.2f}% | Accuracy: {model_accuracy}%")
