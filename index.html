@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Vision Enterprise | Unified Neural Interface</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --accent: #ff007f;
+            --bg: #030508;
+            --card-bg: rgba(13, 17, 23, 0.75);
+            --border: rgba(255, 255, 255, 0.08);
+            --text-main: #e6edf3;
+            --text-dim: #8b949e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            /* Recursive Data Grid Background */
+            background-image: 
+                radial-gradient(circle at 2px 2px, rgba(255,255,255,0.02) 1px, transparent 0),
+                radial-gradient(circle at bottom, rgba(112, 0, 255, 0.1), transparent 70%);
+            background-size: 40px 40px, 100% 100%;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- Global Components --- */
+        .navbar {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+        }
+
+        .logo { font-size: 1.2rem; font-weight: 800; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
+        .logo i { background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo span { color: var(--primary); }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            perspective: 1000px;
+        }
+
+        /* --- Interface Panels --- */
+        .app-card {
+            width: 1000px;
+            max-width: 95%;
+            background: var(--card-bg);
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        /* Scanning Line Effect */
+        .app-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0.2;
+            animation: scan 4s linear infinite;
+            z-index: 10;
+        }
+
+        @keyframes scan { 0% { top: 0%; } 100% { top: 100%; } }
+
+        /* --- Input Interface Styling --- */
+        .hero-section { padding: 60px; display: flex; flex-direction: column; justify-content: center; }
+        .pill { background: rgba(112,0,255,0.15); color: #b985ff; padding: 5px 15px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; margin-bottom: 20px; width: fit-content; border: 1px solid rgba(112,0,255,0.3); }
+        h1 { font-size: 3.2rem; line-height: 1.1; margin-bottom: 20px; }
+        h1 span { background: linear-gradient(to right, var(--primary), #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .upload-area { padding: 50px; background: rgba(0,0,0,0.2); border-left: 1px solid var(--border); display: flex; flex-direction: column; justify-content: center; }
+        
+        .drop-zone {
+            border: 2px dashed var(--border);
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            transition: 0.3s;
+            background: rgba(255,255,255,0.01);
+        }
+
+        .drop-zone:hover { border-color: var(--primary); background: rgba(0, 242, 255, 0.03); }
+        .drop-zone i { font-size: 3rem; color: var(--text-dim); margin-bottom: 15px; }
+        .drop-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+        .btn-predict {
+            width: 100%;
+            margin-top: 25px;
+            padding: 18px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 10px 20px -5px rgba(112, 0, 255, 0.4);
+            transition: 0.3s;
+        }
+
+        .btn-predict:hover { transform: translateY(-3px); filter: brightness(1.1); }
+
+        /* --- Output Interface Styling (Hidden by default) --- */
+        #output-state {
+            display: none;
+            grid-template-columns: 1fr;
+            text-align: center;
+            padding: 60px;
+            width: 500px;
+        }
+
+        .result-val { font-size: 4.5rem; font-weight: 900; margin: 10px 0; color: var(--primary); text-shadow: 0 0 30px rgba(0,242,255,0.3); }
+        
+        .confidence-meter {
+            background: rgba(255,255,255,0.03);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            margin: 30px 0;
+        }
+
+        .progress-container { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 15px; overflow: hidden; }
+        .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 1.5s ease-out; box-shadow: 0 0 15px var(--primary); }
+
+        /* --- Loader --- */
+        .loader { display: none; width: 30px; height: 30px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .footer { padding: 20px; text-align: center; font-size: 0.7rem; color: var(--text-dim); border-top: 1px solid var(--border); }
+
+        #preview-img { width: 100%; max-height: 200px; object-fit: contain; display: none; margin-bottom: 10px; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo"><i class="fa-solid fa-microchip"></i> AI <span>Vision</span></div>
+        <div style="font-size: 0.75rem; color: var(--text-dim);"><i class="fa-solid fa-bolt"></i> Production Node: v4.1</div>
+    </nav>
+
+    <main class="main-container">
+        
+        <div class="app-card" id="input-state">
+            <section class="hero-section">
+                <span class="pill">Convolutional Neural Network</span>
+                <h1> Image <span>Classification</span></h1>
+                <p style="color: var(--text-dim); line-height: 1.6;">Deploy deep convolutional layers to identify objects with surgical precision. Optimized for industrial-scale inference.</p>
+            </section>
+
+            <section class="upload-area">
+                <form id="predictionForm" onsubmit="handlePrediction(event)">
+                    <div class="drop-zone" id="dropZone">
+                        <div id="uploadPlaceholder">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <h3 style="font-size: 1.1rem;">Source Image</h3>
+                            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 5px;">Drag & drop or browse</p>
+                        </div>
+                        <img id="preview-img">
+                        <input type="file" id="fileInput" accept="image/*" required onchange="handleFile(this)">
+                    </div>
+
+                    <button type="submit" class="btn-predict" id="btnPredict">
+                        <span id="btnText">PREDICT IMAGE</span>
+                    </button>
+                    <div class="loader" id="loader"></div>
+                </form>
+            </section>
+        </div>
+
+        <div class="app-card" id="output-state">
+            <div style="padding: 40px;">
+                <span class="pill" style="margin: 0 auto 20px;">Analysis Complete</span>
+                <p style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.6;">Predicted Class</p>
+                <h1 class="result-val" id="resClass">Cat <span style="font-size: 3rem;">🐱</span></h1>
+                
+                <div class="confidence-meter">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                        <span>Confidence Score</span>
+                        <span id="resConfText" style="color: var(--primary);">98.12%</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="resBar"></div>
+                    </div>
+                </div>
+
+                <button class="btn-predict" onclick="resetApp()" style="background: rgba(255,255,255,0.05); border: 1px solid var(--primary); box-shadow: none;">
+                    <i class="fa-solid fa-rotate-left"></i> NEW CLASSIFICATION
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        &copy; 2026 AI Vision Systems • Secure Neural Inference Layer
+    </footer>
+
+    <script>
+        const inputState = document.getElementById('input-state');
+        const outputState = document.getElementById('output-state');
+        const loader = document.getElementById('loader');
+        const btnText = document.getElementById('btnText');
+        const previewImg = document.getElementById('preview-img');
+        const placeholder = document.getElementById('uploadPlaceholder');
+
+        function handleFile(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImg.src = e.target.result;
+                    previewImg.style.display = 'block';
+                    placeholder.style.display = 'none';
+                    document.getElementById('dropZone').style.padding = '20px';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        async function handlePrediction(e) {
+            e.preventDefault();
+            
+            // UI Transition to loading
+            btnText.style.display = 'none';
+            loader.style.display = 'block';
+
+            // Simulate AI Processing (Replace with your actual Fetch/API call)
+            setTimeout(() => {
+                showResults("Cat 🐱", 98.12);
+            }, 1800);
+        }
+
+        function showResults(label, confidence) {
+            // Transition to Output State
+            inputState.style.display = 'none';
+            outputState.style.display = 'grid';
+            
+            document.getElementById('resClass').innerHTML = label;
+            document.getElementById('resConfText').innerText = confidence + '%';
+            
+            // Animate bar
+            setTimeout(() => {
+                document.getElementById('resBar').style.width = confidence + '%';
+            }, 100);
+        }
+
+        function resetApp() {
+            outputState.style.display = 'none';
+            inputState.style.display = 'grid';
+            
+            // Reset Form
+            document.getElementById('predictionForm').reset();
+            previewImg.style.display = 'none';
+            placeholder.style.display = 'block';
+            btnText.style.display = 'block';
+            loader.style.display = 'none';
+            document.getElementById('resBar').style.width = '0%';
+        }
+    </script>
+</body>
+</html>
