@@ -290,6 +290,3 @@ B.Tech Computer Science Engineering
 
 ---
 
-## ⭐ Support
-
-Star this repository if you found it useful.
