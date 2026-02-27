@@ -1,5 +1,10 @@
 https://image-classification-using-cnn-3eh4freqpk3gkrieycp5tz.streamlit.app/
 # 🐶🐱 Dog vs Cat Image Classification using CNN
+![Python](https://img.shields.io/badge/Python-3.10-blue)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-2.15-orange)
+![Streamlit](https://img.shields.io/badge/Streamlit-WebApp-red)
+![Status](https://img.shields.io/badge/Status-Deployed-brightgreen)
+
 
 ## 📌 Overview
 
